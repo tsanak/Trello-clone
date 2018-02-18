@@ -29,10 +29,32 @@ export const store = new Vuex.Store({
                 items: []
             });
         },
+        addItem(state, payload) {
+            let projectIndex = payload.projectIndex;
+            let listIndex = payload.listIndex;
+            let item = payload.item;
+            state.projects[projectIndex].lists[listIndex].items.push({
+                name: item,
+                id: uuidv4(),
+            });
+        },
         removeList(state, payload) {
             let projectIndex = payload.projectIndex;
             let listIndex = payload.listIndex;
             state.projects[projectIndex].lists.splice(listIndex, 1);
+        },
+        removeItem(state, payload) {
+            let projectIndex = payload.projectIndex;
+            let listIndex = payload.listIndex;
+            let itemIndex = payload.itemIndex;
+            state.projects[projectIndex].lists[listIndex].items.splice(itemIndex, 1);
+        },
+        editItem(state, payload) {
+            let projectIndex = payload.projectIndex;
+            let listIndex = payload.listIndex;
+            let itemIndex = payload.itemIndex;
+            let itemName = payload.newName;
+            Vue.set(state.projects[projectIndex].lists[listIndex].items[itemIndex], 'name', itemName);
         }
     },
     actions: {
@@ -66,6 +88,62 @@ export const store = new Vuex.Store({
                     commit('removeList', { projectIndex, listIndex });
                 }
             }
-        }
+        },
+        addItem({ commit, state }, payload) {
+            let item = payload.item;
+            let listId = payload.listId;
+            let projectIndex = state.projects.findIndex(proj => {
+                return proj.id == payload.projectId;
+            });
+            if(projectIndex > -1) {
+                let listIndex = state.projects[projectIndex].lists.findIndex(el => {
+                    return el.id == listId;
+                });
+                if(listIndex > -1) {
+                    commit('addItem', { projectIndex, listIndex, item });
+                }
+            }
+        },
+        removeItem({ commit, state }, payload) {
+            let listId = payload.listId;
+            let itemId = payload.itemId;
+            let projectIndex = state.projects.findIndex(proj => {
+                return proj.id == payload.projectId;
+            });
+            if(projectIndex > -1) {
+                let listIndex = state.projects[projectIndex].lists.findIndex(el => {
+                    return el.id == listId;
+                });
+                if(listIndex > -1) {
+                    let itemIndex = state.projects[projectIndex].lists[listIndex].items.findIndex(el => {
+                        return el.id == itemId;
+                    });
+                    if(itemIndex > -1) {
+                        commit('removeItem', { projectIndex, listIndex, itemIndex });
+                    }
+                }
+            }
+        },
+        editItem({ commit, state }, payload) {
+            let listId = payload.listId;
+            let itemId = payload.item.id;
+            let newName = payload.newName;
+            let projectIndex = state.projects.findIndex(proj => {
+                return proj.id == payload.projectId;
+            });
+            if(projectIndex > -1) {
+                let listIndex = state.projects[projectIndex].lists.findIndex(el => {
+                    return el.id == listId;
+                });
+                if(listIndex > -1) {
+                    let itemIndex = state.projects[projectIndex].lists[listIndex].items.findIndex(el => {
+                        return el.id == itemId;
+                    });
+                    if(itemIndex > -1) {
+                        commit('editItem', { projectIndex, listIndex, itemIndex, newName });
+                    }
+                }
+            }
+        },
     }
 });

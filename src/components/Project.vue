@@ -1,55 +1,74 @@
 <template>
-    <div class="columns m-4">
-        <div class="column"
-            v-for="list in project.lists"
-            :key="list.id"
-        >
-            <div class="card">
-                <header class="card-header">
-                    <p class="card-header-title">
-                    {{ list.name }}
-                    </p>
-                    <span class="card-header-icon"
-                        @click="removeList(list.id)"
-                    >
-                        <span class="icon">
-                            <i class="fas fa-times" aria-hidden="true"></i>
-                        </span>
-                    </span>
-                </header>
-                <div class="card-content">
-                </div>
-            </div>
-        </div>
+    <div class="columns">
         <div class="column">
-            <div class="card">
-                <div class="card-content">
-                    <div class="field">
-                        <div class="control">
-                            <input type="text" class="input" placeholder="Add a list..."
-                            v-model.trim="newList"
-                            @keyup.enter="addList">
-                        </div>
-                    </div>
-                    <div class="field is-grouped j-s-between">
-                        <div class="control">
-                            <button class="button is-link"
-                            @click="addList">Save</button>
-                        </div>
-                        <div class="control">
-                            <button class="button is-text"
-                            @click="newList=''"><i class="fas fa-times"></i></button>
+            <router-link to="/">
+                <button class="button is-outlined" id="back">
+                    <i class="fas fa-arrow-left"></i> 
+                    <span id="span-back">Back</span>
+                </button>
+            </router-link>
+            <div class="columns m-4 mt-50">
+                <div class="column"
+                    v-for="list in project.lists"
+                    :key="list.id"
+                >
+                    <div class="card">
+                        <header class="card-header">
+                            <p class="card-header-title">
+                            {{ list.name }}
+                            </p>
+                            <span class="card-header-icon"
+                                @click="removeList(list.id)"
+                            >
+                                <span class="icon">
+                                    <i class="fas fa-times" aria-hidden="true"></i>
+                                </span>
+                            </span>
+                        </header>
+                        <div class="card-content">
+                            <list-item
+                                v-for="item in list.items"
+                                :key="item.id"
+                                :listId="list.id"
+                                :projectId="projectId"
+                                :item="item"
+                            ></list-item>
+                            <item-list-form
+                                :placeholder="'Add an item...'"
+                                :projectId="projectId"
+                                :listId="list.id"
+                                :isList="false"
+                            ></item-list-form>
                         </div>
                     </div>
                 </div>
+                <div class="column">
+                    <div class="card">
+                        <div class="card-content new-list-card-content">
+                            <item-list-form
+                                :placeholder="'Add a list...'"
+                                :projectId="projectId"
+                                :listId="''"
+                                :isList="true"
+                            ></item-list-form>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import ItemListForm from '@/components/ItemListForm';
+import ListItem from '@/components/ListItem';
 export default {
     name: 'Project',
+    components: {
+        ItemListForm,
+        ListItem
+    },
     computed: {
         projects() {
             return this.$store.getters.projects;
@@ -82,21 +101,50 @@ export default {
 </script>
 
 <style scoped>
-  .card {
-    min-height: 100px;
-    width: 300px;
-  }
+    .card {
+        min-height: 100px;
+        width: 300px;
+    }
 
-  .card:hover {
-    box-shadow: 0px 2px 10px 3px rgba(10, 10, 10, 0.1);
-    transition: all 250ms;
-  }
+    .card:hover {
+        box-shadow: 0px 2px 10px 3px rgba(10, 10, 10, 0.1);
+        transition: all 250ms;
+    }
 
-  .column {
-    max-width: 300px;
-  }
+    .card-content {
+        padding: 0rem 0.5rem 1rem;
+    }
 
-  .card-header {
-    word-break: break-word;
-  }
+    .new-list-card-content {
+        padding: 1.5rem;
+    }
+
+    .column {
+        max-width: 300px;
+    }
+
+    .card-header {
+        word-break: break-word;
+    }
+
+    #back {
+        font-size: 1.4rem;
+        position: fixed;
+        top: 0;
+        left: 0;
+    }
+
+    #span-back {
+        max-width: 0;
+        overflow: hidden;
+        transition: all 300ms;
+    }
+
+    #back:hover > #span-back {
+        max-width: 300px;
+    }
+    
+    .mt-50 {
+        margin-top: 50px;
+    }
 </style>

@@ -33,6 +33,10 @@ html {
   justify-content: space-between !important;
 }
 
+.j-flex-end {
+  justify-content: flex-end !important;
+}
+
 .a-center {
   align-items: center;
 }
