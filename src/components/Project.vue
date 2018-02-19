@@ -1,5 +1,5 @@
 <template>
-    <div class="columns">
+    <div class="columns w100">
         <div class="column">
             <router-link to="/">
                 <button class="button is-outlined" id="back">
@@ -132,6 +132,7 @@ export default {
         position: fixed;
         top: 0;
         left: 0;
+        z-index: 1;
     }
 
     #span-back {
@@ -146,5 +147,9 @@ export default {
     
     .mt-50 {
         margin-top: 50px;
+    }
+
+    .w100 {
+        width: 100%;
     }
 </style>
