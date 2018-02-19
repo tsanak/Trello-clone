@@ -8,13 +8,20 @@
                 </button>
             </router-link>
             <div class="columns m-4 mt-50">
-                <list
-                    v-for="list in project.lists"
-                    :key="list.id"
-                    :list="list"
-                    :projectId="projectId"
-                >
-                </list>
+                <draggable 
+                    element="span"
+                    v-model="project.lists" 
+                    @end="onEnd"
+                    class="d-inherit"
+                    >
+                    <list
+                        v-for="list in project.lists"
+                        :key="list.id"
+                        :list="list"
+                        :projectId="projectId"
+                    >
+                    </list>
+                </draggable>
                 <div class="column">
                     <div class="card">
                         <div class="card-content new-list-card-content">
@@ -35,11 +42,13 @@
 <script>
 import ItemListForm from '@/components/ItemListForm';
 import List from '@/components/List';
+import draggable from 'vuedraggable';
 export default {
     name: 'Project',
     components: {
         ItemListForm,
-        List
+        List,
+        draggable
     },
     computed: {
         projects() {
@@ -50,7 +59,7 @@ export default {
                 return proj.id == this.projectId
             });
             return currentProject;
-        }
+        },
     },
     data() {
         return {
@@ -64,6 +73,12 @@ export default {
             //Add list to project
             this.$store.dispatch('addList', { list: this.newList, projectId: this.projectId});
             this.newList = '';
+        },
+        onEnd() {
+            this.$store.dispatch('updateListPosition', {
+                projectId: this.projectId,
+                lists: this.project.lists
+            });
         }
     }
 }
@@ -120,5 +135,9 @@ export default {
 
     .w100 {
         width: 100%;
+    }
+    
+    .d-inherit {
+        display: inherit;
     }
 </style>

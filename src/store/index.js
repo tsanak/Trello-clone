@@ -43,6 +43,11 @@ export const store = new Vuex.Store({
             let listIndex = payload.listIndex;
             state.projects[projectIndex].lists.splice(listIndex, 1);
         },
+        updateListPosition(state, payload) {
+            let projectIndex = payload.projectIndex;
+            let lists = payload.lists;
+            state.projects[projectIndex].lists = lists;
+        },
         removeItem(state, payload) {
             let projectIndex = payload.projectIndex;
             let listIndex = payload.listIndex;
@@ -87,6 +92,15 @@ export const store = new Vuex.Store({
                 if(listIndex > -1) {
                     commit('removeList', { projectIndex, listIndex });
                 }
+            }
+        },
+        updateListPosition({ commit, state }, payload) {
+            let lists = payload.lists;
+            let projectIndex = state.projects.findIndex(proj => {
+                return proj.id == payload.projectId;
+            });
+            if(projectIndex > -1) {
+                commit('updateListPosition', { projectIndex, lists });
             }
         },
         addItem({ commit, state }, payload) {
