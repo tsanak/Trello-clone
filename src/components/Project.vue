@@ -8,40 +8,13 @@
                 </button>
             </router-link>
             <div class="columns m-4 mt-50">
-                <div class="column"
+                <list
                     v-for="list in project.lists"
                     :key="list.id"
+                    :list="list"
+                    :projectId="projectId"
                 >
-                    <div class="card">
-                        <header class="card-header">
-                            <p class="card-header-title">
-                            {{ list.name }}
-                            </p>
-                            <span class="card-header-icon"
-                                @click="removeList(list.id)"
-                            >
-                                <span class="icon">
-                                    <i class="fas fa-times" aria-hidden="true"></i>
-                                </span>
-                            </span>
-                        </header>
-                        <div class="card-content">
-                            <list-item
-                                v-for="item in list.items"
-                                :key="item.id"
-                                :listId="list.id"
-                                :projectId="projectId"
-                                :item="item"
-                            ></list-item>
-                            <item-list-form
-                                :placeholder="'Add an item...'"
-                                :projectId="projectId"
-                                :listId="list.id"
-                                :isList="false"
-                            ></item-list-form>
-                        </div>
-                    </div>
-                </div>
+                </list>
                 <div class="column">
                     <div class="card">
                         <div class="card-content new-list-card-content">
@@ -54,7 +27,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -62,12 +34,12 @@
 
 <script>
 import ItemListForm from '@/components/ItemListForm';
-import ListItem from '@/components/ListItem';
+import List from '@/components/List';
 export default {
     name: 'Project',
     components: {
         ItemListForm,
-        ListItem
+        List
     },
     computed: {
         projects() {
@@ -92,9 +64,6 @@ export default {
             //Add list to project
             this.$store.dispatch('addList', { list: this.newList, projectId: this.projectId});
             this.newList = '';
-        },
-        removeList(listId) {
-            this.$store.dispatch('removeList', { listId, projectId: this.projectId});            
         }
     }
 }

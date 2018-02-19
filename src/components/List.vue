@@ -1,0 +1,70 @@
+<template>
+    <div class="column">
+        <div class="card">
+            <header class="card-header">
+                <p class="card-header-title">
+                {{ list.name }}
+                </p>
+                <span class="card-header-icon"
+                    @click="removeList(list.id)"
+                >
+                    <span class="icon">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                    </span>
+                </span>
+            </header>
+            <div class="card-content">
+                <list-item
+                    v-for="item in list.items"
+                    :key="item.id"
+                    :listId="list.id"
+                    :projectId="projectId"
+                    :item="item"
+                ></list-item>
+                <item-list-form
+                    :placeholder="'Add an item...'"
+                    :projectId="projectId"
+                    :listId="list.id"
+                    :isList="false"
+                ></item-list-form>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import ItemListForm from '@/components/ItemListForm';
+import ListItem from '@/components/ListItem';
+export default {
+  name: 'List',
+  components: {
+      ItemListForm,
+      ListItem
+  },
+  methods: {
+    removeList() {
+        this.$store.dispatch('removeList', { 
+            listId: this.list.id, 
+            projectId: this.projectId
+        });            
+    }
+  },
+  props: ['list', 'projectId']
+}
+</script>
+
+<style scoped>
+    .card {
+        min-height: 100px;
+        width: 300px;
+    }
+
+    .card:hover {
+        box-shadow: 0px 2px 10px 3px rgba(10, 10, 10, 0.1);
+        transition: all 250ms;
+    }
+
+    .card-content {
+        padding: 0rem 0.5rem 1rem;
+    }
+</style>
