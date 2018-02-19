@@ -7,6 +7,9 @@
                     <span id="span-back">Back</span>
                 </button>
             </router-link>
+            <settings-sidebar
+                :projectId="projectId"
+            ></settings-sidebar>
             <div class="columns m-4 mt-50">
                 <draggable 
                     element="span"
@@ -43,13 +46,15 @@
 <script>
 import ItemListForm from '@/components/ItemListForm';
 import List from '@/components/List';
+import SettingsSidebar from '@/components/SettingsSidebar';
 import draggable from 'vuedraggable';
 export default {
     name: 'Project',
     components: {
         ItemListForm,
         List,
-        draggable
+        draggable,
+        SettingsSidebar
     },
     computed: {
         projects() {
@@ -60,12 +65,12 @@ export default {
                 return proj.id == this.projectId
             });
             return currentProject;
-        },
+        }
     },
     data() {
         return {
             projectId: this.$route.params.projectID,
-            newList: ''
+            newList: '',
         }
     },
     methods: {
@@ -81,6 +86,11 @@ export default {
                 lists: this.project.lists
             });
         }
+    },
+    created() {
+        let project_bg = this.project.background;
+        if(!project_bg) project_bg = "#dadada";
+        document.documentElement.style.cssText = "background-color: "+ project_bg;
     }
 }
 </script>
@@ -129,7 +139,9 @@ export default {
     #back:hover > #span-back {
         max-width: 300px;
     }
-    
+
+
+
     .mt-50 {
         margin-top: 50px;
     }

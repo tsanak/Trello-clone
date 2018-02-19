@@ -94,7 +94,8 @@ export default {
       this.project = {
         name: '',
         id: '',
-        lists: []
+        lists: [],
+        background: '#dadada'
       };
       this.changedName = false;
     },
@@ -111,6 +112,10 @@ export default {
       this.closeModal();
       this.clearData();
     },
+  },
+  beforeCreate() {
+    let home_bg = "dadada";
+    document.documentElement.style.cssText = "background-color: "+ home_bg;
   }
 }
 </script>

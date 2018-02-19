@@ -60,6 +60,16 @@ export const store = new Vuex.Store({
             let itemIndex = payload.itemIndex;
             let itemName = payload.newName;
             Vue.set(state.projects[projectIndex].lists[listIndex].items[itemIndex], 'name', itemName);
+        },
+        updateProjectBackground(state, payload) {
+            let projectIndex = payload.projectIndex;
+            let background = payload.background;
+            if(state.projects[projectIndex].background != undefined) {
+                Vue.set(state.projects[projectIndex], 'background', background);
+            }
+            else {
+                state.projects[projectIndex]['background'] = background;
+            }
         }
     },
     actions: {
@@ -159,5 +169,19 @@ export const store = new Vuex.Store({
                 }
             }
         },
+        updateProjectBackground({ commit, state }, payload) {
+            let projectId = payload.projectId;
+            let background = payload.background;
+            let projectIndex = state.projects.findIndex(proj => {
+                return proj.id == payload.projectId;
+            });
+            
+            if(projectIndex > -1) {
+                commit('updateProjectBackground', {
+                    projectIndex,
+                    background
+                });
+            }
+        }
     }
 });
