@@ -14,13 +14,24 @@
                 </span>
             </header>
             <div class="card-content">
-                <list-item
-                    v-for="item in list.items"
-                    :key="item.id"
-                    :listId="list.id"
-                    :projectId="projectId"
-                    :item="item"
-                ></list-item>
+                <draggable 
+                    :options="{group:'listItems'}"
+                    element="span"
+                    v-model="list.items" 
+                    @end="onEnd"
+                    :class="[
+                        list.items.length > 0 ? 'd-inherit' : 'is-block min-h-20'
+                    ]"
+                    >
+                    <list-item
+                        v-for="item in list.items"
+                        :key="item.id"
+                        :listId="list.id"
+                        :projectId="projectId"
+                        :item="item"
+                    ></list-item>
+                </draggable>
+
                 <item-list-form
                     :placeholder="'Add an item...'"
                     :projectId="projectId"
@@ -35,11 +46,14 @@
 <script>
 import ItemListForm from '@/components/ItemListForm';
 import ListItem from '@/components/ListItem';
+import draggable from 'vuedraggable';
+
 export default {
   name: 'List',
   components: {
       ItemListForm,
-      ListItem
+      ListItem,
+      draggable
   },
   methods: {
     removeList() {
@@ -47,6 +61,10 @@ export default {
             listId: this.list.id, 
             projectId: this.projectId
         });            
+    },
+    onEnd() {
+        console.log("ended");
+        this.$emit('itemsChanged')
     }
   },
   props: ['list', 'projectId']
@@ -66,5 +84,9 @@ export default {
 
     .card-content {
         padding: 0rem 0.5rem 1rem;
+    }
+
+    .min-h-20 {
+        min-height: 20px;
     }
 </style>

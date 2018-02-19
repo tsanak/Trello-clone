@@ -19,6 +19,7 @@
                         :key="list.id"
                         :list="list"
                         :projectId="projectId"
+                        @itemsChanged="onEnd"
                     >
                     </list>
                 </draggable>
