@@ -6,9 +6,13 @@
         :key="project.id"
       >
         <router-link :to="{name: 'Project', params: { projectID: project.id }}">
-          <div class="card is-flex j-center a-center">
+          <div class="card is-flex j-center a-center project-card">
             <div class="card-content">
               <h2>{{ project.name }}</h2>
+              <span class="icon deleteProject"
+                @click.prevent="triggerDeleteModal(project)">
+                <i class="fas fa-trash"></i>
+              </span>
             </div>
           </div>
         </router-link>
@@ -24,7 +28,7 @@
       </div>
     </div>
     <div :class="['modal', { 'is-active': isOpen }]">
-      <div class="modal-background" @click="closeModal" @keydown.esc="closeModal"></div>
+      <div class="modal-background" @click="closeModal"></div>
       <div class="modal-card">
         <header class="modal-card-head">
           <p class="modal-card-title">Create a new project</p>
@@ -57,12 +61,26 @@
         </footer>
       </div>
     </div>
+
+    <modal
+      :title="'Are you sure?'"
+      :content="'Are you sure you want to delete the project: '+ projectData.name +' ?'"
+      :successClass="'is-danger'"
+      :successTitle="'Delete'"
+      :openModalProp="openModalDeleteProject"
+      @success="deleteProject"
+      @closeModal="openModalDeleteProject = false;"
+    ></modal>
   </div>
 </template>
 
 <script>
+import Modal from '@/components/Modal';
 export default {
   name: 'Home',
+  components: {
+    Modal
+  },
   data() {
     return {
       project: {
@@ -71,7 +89,12 @@ export default {
         lists: []
       },
       isOpen: false,
-      changedName: false
+      changedName: false,
+      openModalDeleteProject: false,
+      projectData: {
+        name: '',
+        id: ''
+      }
     }
   },
   computed: {
@@ -112,9 +135,20 @@ export default {
       this.closeModal();
       this.clearData();
     },
+    triggerDeleteModal(project) {
+      this.projectData = { 
+        name: project.name, 
+        id: project.id
+      }
+      this.openModalDeleteProject = true;
+    },
+    deleteProject() {
+      let projectId = this.projectData.id;
+      this.$store.dispatch('deleteProject', { projectId });
+    }
   },
   beforeCreate() {
-    let home_bg = "dadada";
+    let home_bg = "#dadada";
     document.documentElement.style.cssText = "background-color: "+ home_bg;
   }
 }
@@ -155,5 +189,25 @@ export default {
 
   .column {
     max-width: 300px;
+  }
+
+  .deleteProject {
+    position: absolute;
+    top: 5px;
+    right: -25px;
+    transition: right 250ms;
+    color: #585858;
+  }
+
+  .project-card {
+    overflow: hidden;
+  }
+
+  .project-card:hover .deleteProject {
+    right: 5px;
+  }
+
+  .deleteProject:hover {
+    color: #333333;
   }
 </style>

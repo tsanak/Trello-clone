@@ -70,6 +70,11 @@ export const store = new Vuex.Store({
             else {
                 state.projects[projectIndex]['background'] = background;
             }
+        },
+        deleteProject(state, payload) {
+            let projectIndex = payload.projectIndex;
+            let background = payload.background;
+            state.projects.splice(projectIndex, 1);
         }
     },
     actions: {
@@ -180,6 +185,18 @@ export const store = new Vuex.Store({
                 commit('updateProjectBackground', {
                     projectIndex,
                     background
+                });
+            }
+        },
+        deleteProject({ commit, state }, payload) {
+            let projectId = payload.projectId;
+            let projectIndex = state.projects.findIndex(proj => {
+                return proj.id == payload.projectId;
+            });
+                        
+            if(projectIndex > -1) {
+                commit('deleteProject', {
+                    projectIndex
                 });
             }
         }

@@ -85,7 +85,7 @@ export default {
                 projectId: this.projectId,
                 lists: this.project.lists
             });
-        }
+        },
     },
     created() {
         let project_bg = this.project.background;

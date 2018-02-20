@@ -6,7 +6,7 @@
                 {{ list.name }}
                 </p>
                 <span class="card-header-icon"
-                    @click="removeList(list.id)"
+                    @click="openModal = true"
                 >
                     <span class="icon">
                         <i class="fas fa-times" aria-hidden="true"></i>
@@ -40,6 +40,17 @@
                 ></item-list-form>
             </div>
         </div>
+            
+        <modal
+            :title="'Are you sure?'"
+            :content="'Are you sure you want to delete the list:'+ list.name +' ?'"
+            :successClass="'is-danger'"
+            :successTitle="'Delete'"
+            :openModalProp="openModal"
+            @success="removeList"
+            @closeModal="openModal = false;"
+        ></modal>
+
     </div>
 </template>
 
@@ -47,13 +58,20 @@
 import ItemListForm from '@/components/ItemListForm';
 import ListItem from '@/components/ListItem';
 import draggable from 'vuedraggable';
+import Modal from '@/components/Modal';
 
 export default {
   name: 'List',
   components: {
       ItemListForm,
       ListItem,
-      draggable
+      draggable,
+      Modal
+  },
+  data() {
+      return {
+          openModal: false
+      }
   },
   methods: {
     removeList() {
@@ -63,7 +81,6 @@ export default {
         });            
     },
     onEnd() {
-        console.log("ended");
         this.$emit('itemsChanged')
     }
   },
