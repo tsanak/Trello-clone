@@ -1,7 +1,7 @@
 <template>
     <div class="columns w100">
         <div class="column">
-            <router-link to="/">
+            <router-link to="/home">
                 <button class="button is-outlined" id="back">
                     <i class="fas fa-arrow-left"></i> 
                     <span id="span-back">Back</span>
